@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather-forecast</title>
+    <style>
+      body {
+        /* display: flex;
+            justify-content: center;
+             align-items: center; */
+        min-height: 100vh;
+        background: url("https://images.pexels.com/photos/2531709/pexels-photo-2531709.jpeg?cs=srgb&dl=pexels-roacunha-2531709.jpg&fm=jpg");
+        background-size: cover;
+        background-position: center;
+        color: antiquewhite;
+        font-size: larger;
+      }
+      .card {
+        text-align: center;
+        padding: 15px;
+        margin: 30px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        /* height: 200px; */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        /* margin-top: 10px; */
+        display: none;
+      }
+
+      /* .container {
+
+            height: 550px;
+            width: 550px;
+            border: 3px solid antiquewhite;
+            border-radius: 20px;
+            padding: 10px;
+            background: transparent;
+            backdrop-filter: blur(10px);
+           
+            margin: auto;
+        } */
+      .container {
+        width: 90%; 
+        max-width: 450px;
+        min-width: 300px; /* optnal don’t get too small */
+        height: auto; 
+        padding: 15px;
+        border: 3px solid antiquewhite;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        margin: 20px auto; 
+      }
+
+      .city-name {
+        font-size: 30px;
+        font-weight: 300;
+        color: rgb(5, 0, 7);
+
+        margin-bottom: 2px;
+        text-shadow: 1px 1px 2px rgba(98, 58, 133, 0.5);
+      }
+
+      h1 {
+        text-align: center;
+        color: antiquewhite;
+      }
+      #city {
+        border-radius: 10px;
+        padding: 9px;
+        border: 2px solid rgb(199, 181, 199);
+        width: 250px;
+      }
+      .btn {
+        border-radius: 10px;
+        padding: 9px;
+        /* background-color: rgb(90, 67, 98); */
+        margin-right: 15px;
+        width: 150px;
+        border: 2px solid rgb(187, 163, 187);
+      }
+      @media (max-width: 500px) {
+        .card {
+          padding: 10px;
+          font-size: 0.9rem;
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        #city,
+        .btn {
+          max-width: 100%;
+        }
+
+        img {
+          width: 60px; /* smaller img on small screens */
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Weather Forecast</h1>
+    <div class="container">
+      <input type="text" id="city" placeholder="Enter City Name..." />
+
+      <button class="btn" onclick="getWeather()">Search</button>
+      <div class="card"></div>
+    </div>
+    <script>
+      function getWeatherImage(weather) {
+        weather = weather.toLowerCase();
+
+        if (weather.includes("cloud")) return "img/overcast clouds.png";
+        if (weather.includes("sunny")) return "img/sunny.png";
+        if (weather.includes("rain")) return "img/rainy.png";
+        if (weather.includes("haze") || weather.includes("mist"))
+          return "img/haze.png";
+        if (weather.includes("clear sky") || weather.includes("clear"))
+          return "img/clear sky.png";
+        if (weather.includes("smoke")) return "img/smoke.png";
+
+        return ""; 
+      }
+
+      const getWeather = async () => {
+        const city = document.getElementById("city").value;
+        const data = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=f9c2bc5da5a058ffe5ac8f0cb365f4f9`
+        );
+        const resp = await data.json();
+        if (resp.cod == "200") {
+          console.log(resp);
+          document.querySelector(".card").style.display = "block";
+
+          document.querySelector(".card").innerHTML = `
+           <img src="${getWeatherImage(resp.weather[0].main)}" 
+         alt=""
+         style="width:80px; display:block; margin:auto;">
+            <p class="city-name"> ${resp.name}</p>
+            <hr>
+            
+            <p>Temp : ${(resp.main.temp - 273.15).toFixed(1)}°C</p>
+            <hr>
+            <p>Humidity : ${resp.main.humidity}%</p>
+            <hr>
+            <p>Weather Description : ${resp.weather.map(
+              (w) => w.description
+            )}</p>
+            <hr>
+            <p>Wind Speed : ${resp.wind.speed}</p>
+            <hr>
+            
+            `;
+        }
+        if (resp.cod == "404") {
+          document.querySelector(".card").innerHTML = `
+            <p>City : ${resp.message}</p>`;
+        }
+      };
+    </script>
+  </body>
+</html>
