@@ -1,6 +1,6 @@
 # 🌟 Weather Forecast App
 
-**LIVE DEMO:** [Try the App Here!](https://tahira-1991.github.io/Weather_forecast/)
+**LIVE DEMO:** [Try the App Here!](https://tahira-1991.github.io/Weather_forecast./)
 
 ---
 
